@@ -1,16 +1,21 @@
 [Unit]
 Description=Lyric Alignment API
-After=network.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
-User=pi
-WorkingDirectory=/home/pi/alignment
+User=username
+WorkingDirectory=/home/username/alignment
 Environment=PYTHONUNBUFFERED=1
-Environment=STABLE_TS_MODEL=base
+Environment=STABLE_TS_MODEL=small
 Environment=STABLE_TS_LANGUAGE=ja
-Environment=STABLE_TS_DOWNLOAD_ROOT=/home/pi/alignment/.cache/stable-ts
-ExecStart=/usr/bin/python3 /home/pi/alignment/run_service.py serve --host 0.0.0.0 --port 8000 --auto-install
+Environment=STABLE_TS_DOWNLOAD_ROOT=/home/username/alignment/.cache/stable-ts
+Environment=STABLE_TS_VAD=true
+Environment=STABLE_TS_KEEP_ALL_LINES=true
+# To enable vocal isolation (much slower per request), uncomment:
+# Environment=STABLE_TS_DENOISER=demucs
+ExecStart=/home/username/alignment/.venv/bin/python /home/username/alignment/align.py serve --host 0.0.0.0 --port 8000
 Restart=on-failure
 RestartSec=5
 
